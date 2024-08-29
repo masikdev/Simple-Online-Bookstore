@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Masik Book</title>
+  <!-- Fonts -->
+  <!-- poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,700;1,100;1,300;1,400;1,700&display=swap"
+    rel="stylesheet" />
+  <!-- DSM Serif Text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet" />
+
+  <!-- font awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+
+  <!-- local css -->
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Alpine JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Midtrans -->
+  <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
+    data-client-key="SB-Mid-client-GttRogQ5ldadgU9w"></script>
+
+</head>
+
+<body>
+  <!-- Header Section -->
+  <header>
+    <nav class="navbar" x-data>
+      <div class="navbar-logo"><a href="">TheBook</a></div>
+      <div class="main-navbar">
+        <a href="#hero">Home</a>
+        <a href="#products">Products</a>
+        <a href="#about">About</a>
+      </div>
+      <div class="navbar-extra">
+        <!-- <a href="#">Search Book</a> -->
+        <a href="#" id="shopping-cart">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="quantity-notification" x-show="$store.shoppingCart.quantity"
+            x-text="$store.shoppingCart.quantity"></span>
+        </a>
+        <a href="#"><i class="fa-solid fa-bars" id="hamburger-menu"></i></a>
+      </div>
+      <!-- Shopping Cart -->
+      <div class="shopping-cart">
+        <h5 x-show="$store.shoppingCart.items.length">Shopping Cart</h5>
+        <template x-for="(item, index) in $store.shoppingCart.items" x-keys="index">
+          <div class="cart-item">
+            <div class="img-item">
+              <img :src="`assets/Books/Bestsellers/${item.img}`" :alt="item.name" />
+            </div>
+            <div class="item-detail">
+              <h4 x-text="item.name"></h4>
+              <div class="item-price">
+                <span class="text" x-text="rupiah(item.price)"></span>
+                &times;
+                <span>
+                  <button @click="$store.shoppingCart.remove(item.id)">
+                    &minus;
+                  </button>
+                  <span x-text="item.quantity"></span>
+                  <button @click="$store.shoppingCart.add(item)">
+                    &plus;
+                  </button>
+                </span>
+                <p>Subtotal &colon;</p>
+                <p><b x-text="rupiah(item.total)"></b></p>
+              </div>
+            </div>
+          </div>
+        </template>
+        <h4 x-show="!$store.shoppingCart.items.length">Empty Cart.</h4>
+        <h4 x-show="$store.shoppingCart.items.length">
+          Total: <span x-text="rupiah($store.shoppingCart.total)"></span>
+        </h4>
+        <div class="form-container" x-show="$store.shoppingCart.items.length">
+          <form action="" id="checkoutForm">
+            <input type="hidden" name="items" x-model="JSON.stringify($store.shoppingCart.items)">
+            <input type="hidden" name="total" x-model="$store.shoppingCart.total">
+
+            <h5>Customer Detail</h5>
+            <label for="name"><span>Name</span><input type="text" name="name" id="name" placeholder="Enter your name" />
+            </label>
+            <label for="email"><span>Email</span><input type="email" name="email" id="email"
+                placeholder="Enter your email" />
+            </label>
+            <label for="phone"><span>Phone</span><input type="number" name="phone" id="phone" autocomplete="on"
+                placeholder="Enter your phone number" />
+            </label>
+            <button class="button-checkout disabled" type="submit" id="button-checkout" value="">Checkout</button>
+          </form>
+        </div>
+      </div>
+      <!-- Shopping Cart End -->
+    </nav>
+  </header>
+  <!-- Header End -->
+
+  <main>
+    <!-- Hero Start -->
+    <section class="container hero" id="hero">
+      <h1>Welcome to <span>TheBook</span></h1>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio
+        eius voluptatum, pariatur iusto sint autem nisi deleniti, repudiandae
+        optio nulla saepe molestias necessitatibus beatae esse perferendis.
+        Perspiciatis asperiores amet aut.
+      </p>
+      <a href="#products" class="main-btn">
+        <span>Go to Products</span><i class="fa-solid fa-arrow-right arrow"></i>
+      </a>
+    </section>
+    <!-- Hero End -->
+
+    <!-- Products -->
+    <section class="container products" id="products" x-data="products">
+      <div class="best-sellers">
+        <h2>Best Titles</h2>
+        <p>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab tempore
+          officia eaque enim delectus fugiat.
+        </p>
+
+        <div class="book-shelf">
+          <template x-for="(item, index) in getBestSellers()" x-key="index">
+            <div class="book">
+              <img :src="`assets/Books/Bestsellers/${item.img}`" :alt="`${item.name}`" />
+              <div class="call-to-action">
+                <a id="modal-btn" href="#" @click.prevent="$store.shoppingCart.add(item)"><i
+                    class="fa-solid fa-cart-shopping"></i></a>
+              </div>
+            </div>
+          </template>
+        </div>
+        <div class="book-shelf">
+          <template x-for="(item, index) in getBestSellers2()" x-key="index">
+            <div class="book">
+              <img :src="`assets/Books/Bestsellers/${item.img}`" :alt="`${item.name}`" />
+              <div class="call-to-action">
+                <a id="modal-btn" href="#" @click.prevent="$store.shoppingCart.add(item)"><i
+                    class="fa-solid fa-cart-shopping"></i></a>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- 
+        <div class="book-shelf">
+          <template x-for="(item, index) in getBestSellers2()" x-key="index">
+            <div class="book">
+              <img :src="`assets/Books/Bestsellers/${item.img}`" :alt="`${item.name}`" />
+              <div class="call-to-action">
+                <a id="modal-btn" href="#" @click.prevent="$store.shoppingCart.add(item)"><i
+                    class="fa-solid fa-cart-shopping"></i></a>
+              </div>
+              <p class="test" x-text="rupiah(item.price)">TEST</p>
+            </div>
+          </template>
+        </div> -->
+      </div>
+    </section>
+
+
+    <section class="container about" id="about">
+      <h2>About</h2>
+      <div class="content">
+        <div class="banner">
+          <img src="assets/About.jpg" alt="About">
+        </div>
+        <div class="text">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit facere vero debitis. Expedita, sint?
+            Consequuntur consequatur nulla quibusdam saepe totam exercitationem in aperiam ducimus tempora quaerat
+            aspernatur optio accusantium unde, dolore alias dolor assumenda quidem, pariatur, labore ullam numquam sed.
+          </p>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, dolor dolores pariatur voluptate culpa
+            quia officiis blanditiis ducimus ad necessitatibus possimus autem accusamus alias nihil!</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container features">
+      <div class="feature-card">
+        <div class="icon"><i class="fa-solid fa-clock"></i></div>
+        <h4>Quick Delivery</h4>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla quae, quibusdam voluptas pariatur maiores
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="icon"><i class="fa-solid fa-wallet"></i></div>
+        <h4>Secure Payment</h4>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla quae, quibusdam voluptas pariatur maiores
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="icon"><i class="fa-solid fa-medal"></i></div>
+        <h4>Best Quality</h4>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla quae, quibusdam voluptas pariatur maiores
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="icon"><i class="fa-solid fa-shield"></i></div>
+        <h4>Product Guarantee</h4>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla quae, quibusdam voluptas pariatur maiores
+        </p>
+      </div>
+
+    </section>
+
+
+  </main>
+
+  <footer>
+    <div class="social-icons">
+      <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="#"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#"><i class="fa-brands fa-twitter"></i></a>
+    </div>
+    <div class="footer-menu">
+      <a href="#hero">Home</a>
+      <a href="#products">Products</a>
+      <a href="#">About</a>
+    </div>
+    <p>Copyright &copy;2024; Developed by MasikDev</p>
+  </footer>
+
+  <!-- Modals -->
+  <div class="book-modal" id="book-modal">
+    <div class="modal-container">
+      <div class="modal-content">
+        <div id="close-icon" class="close-icon">
+          <i class="fa-solid fa-xmark"></i>
+        </div>
+        <div class="book-img">
+          <img src="assets/Books/Bestsellers/Atomic Habits.jpg" alt="Atomic Habits" />
+        </div>
+        <div class="book-detail">
+          <h3>Atomic Habits</h3>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Accusantium labore corporis, quis molestias minus vitae quos
+            distinctio porro dolorem consectetur illo placeat nobis natus ut
+            fugit nesciunt praesentium iusto maiores voluptatum nemo obcaecati
+            quam. Perferendis repudiandae quasi mollitia voluptatibus ad?
+          </p>
+          <h4>Rp 50.000,00</h4>
+          <div class="call-to-action">
+            <button id="add-to-cart">
+              Add To <i class="fa-solid fa-cart-shopping"></i>
+            </button>
+            <a href="#"><i id="favorite-btn" class="fa-regular fa-heart"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modals End -->
+
+  <script src="script/script.js"></script>
+  <!-- App -->
+  <script src="script/app.js"></script>
+</body>
+
+</html>
