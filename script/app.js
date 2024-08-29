@@ -128,7 +128,7 @@ btnCheckout.addEventListener('click', async function (e) {
   const data = new URLSearchParams(formData);
   const objData = Object.fromEntries(data);
   // const message = formatMessage(objData);
-  // window.open('http://wa.me/6283164224974?text=' + encodeURIComponent(message));
+  // window.open('http://wa.me/NO_PHONE?text=' + encodeURIComponent(message));
 
   // ask for transaction token using ajax/fetch
 
